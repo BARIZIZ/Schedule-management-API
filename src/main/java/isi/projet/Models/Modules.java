@@ -17,11 +17,11 @@ import lombok.Data;
 @Table(name = "module")
 public class Modules {
 	@Id
-	private String Intitule;
-	private Long VHCours;
-	private Long VHtd;
-	private Long VHtp;
-	private Long Evaluation;
+	private String intitule;
+	private Long vHCours;
+	private Long vHtd;
+	private Long vHtp;
+	private Long evaluation;
 	@OneToMany(mappedBy = "module")
     private Set<Intervention> interventions = new HashSet<>();
     @ManyToOne

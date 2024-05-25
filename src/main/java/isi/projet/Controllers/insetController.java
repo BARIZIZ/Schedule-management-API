@@ -1,6 +1,7 @@
 package isi.projet.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import isi.projet.Models.InterventionId;
 import isi.projet.Models.Modules;
 
 @RestController
+@CrossOrigin(origins ="http://localhost:4200")
 @RequestMapping("/add")
 public class insetController {
 	@Autowired
