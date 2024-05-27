@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import isi.projet.Repository.ModuleRepoPagination;
+import isi.projet.Services.ModuleService;
+import isi.projet.Services.ModuleServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +29,8 @@ public class ModuleController {
 	@Autowired
 	FiliereRepo filiererepo;
 
+	@Autowired
+	ModuleServiceInterface moduleService;
 	// Recuperer les modules
 	@GetMapping("")
 	public List<ModuleDTO> getModules() {
@@ -129,4 +137,12 @@ public class ModuleController {
 			return ResponseEntity.notFound().build();
 		}
 	}
+
+	//pour  la pagination
+	@GetMapping("/paginated/{page}/{size}")
+	public ResponseEntity<Page<Modules>> getModules(@PathVariable int page, @PathVariable int size) {
+		Page<Modules> modules = moduleService.getModules(page, size);
+		return ResponseEntity.ok(modules);
+	}
+
 }

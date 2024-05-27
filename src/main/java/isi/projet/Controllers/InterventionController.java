@@ -1,8 +1,11 @@
 package isi.projet.Controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import isi.projet.Repository.FiliereRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +29,12 @@ public class InterventionController {
 	ModuleRepo modulerepo;
 	@Autowired
 	EnseignantRepo ensignantrepo;
+	@Autowired
+	FiliereRepo filiereRepo;
 
 //	ajouter intervention
-	@PostMapping("/add")
-	public String addIntervention(@RequestBody InterventionDTO interventiondto) {
+	@PostMapping("")
+	public ResponseEntity< String> addIntervention(@RequestBody InterventionDTO interventiondto) {
 		Modules module = modulerepo.findById(interventiondto.getIntitule()).orElse(null);
 		Enseignant enseignant = ensignantrepo.findById(interventiondto.getEmail()).orElse(null);
 		if (module != null && enseignant != null) {
@@ -45,9 +50,9 @@ public class InterventionController {
 			intervention.setEnseignant(enseignant);
 			intervention.setModule(module);
 			interventionrepo.save(intervention);
-			return "done";
+			return ResponseEntity.ok().build();
 		} else {
-			return "error";
+			return ResponseEntity.notFound().build();
 
 		}
 
@@ -74,7 +79,7 @@ public class InterventionController {
 	}
 
 	// editer intervention
-	@PutMapping("/update/{moduleId}/{enseignantId}")
+	@PutMapping("{moduleId}/{enseignantId}")
 	public ResponseEntity<String> updateIntervention(@PathVariable String moduleId, @PathVariable String enseignantId,
 			@RequestBody InterventionDTO updatedInterventiondto) {
 		// Recherchez l'intervention dans la base de données par sa clé composite
@@ -99,7 +104,7 @@ public class InterventionController {
 	}
 
 //	supprimer intervention
-	@DeleteMapping("/delete/{moduleId}/{enseignantId}")
+	@DeleteMapping("/{moduleId}/{enseignantId}")
 	public ResponseEntity<String> deleteIntervention(@PathVariable String moduleId, @PathVariable String enseignantId) {
 		// Recherchez l'intervention dans la base de données par sa clé composite
 		InterventionId interventionId = new InterventionId(moduleId, enseignantId);
@@ -114,4 +119,13 @@ public class InterventionController {
 		}
 	}
 
+	@GetMapping("/count")
+	public Map<String,Long> countModule(){
+		 Map<String,Long> count =new HashMap<>();
+
+		 count.put("module",modulerepo.count());
+		 count.put("enseignant",ensignantrepo.count());
+		 count.put("filiere",filiereRepo.count());
+		 return count;
+	}
 }
